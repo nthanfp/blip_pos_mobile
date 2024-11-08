@@ -1,16 +1,16 @@
-# blip_pos
+# BLIP POS Mobile
 
-A new Flutter project.
+**BLIP POS Mobile** adalah aplikasi Point of Sale (POS) berbasis Flutter yang dirancang untuk membantu pemilik bisnis mengelola toko mereka dengan lebih efisien dan efektif. Aplikasi ini menyediakan berbagai fitur yang memudahkan operasional sehari-hari, termasuk:
 
-## Getting Started
+## Fitur Utama
 
-This project is a starting point for a Flutter application.
+- **Multi Toko**: Mengelola beberapa toko dalam satu platform.
+- **Manajemen Pegawai**: Mengatur karyawan dan memonitor kinerja.
+- **Manajemen Pelanggan**: Mengelola data pelanggan untuk layanan yang lebih baik.
+- **Manajemen Produk**: Mengelola stok produk dengan mudah.
+- **Manajemen Inventori**: Memantau inventori secara real-time.
+- **Manajemen Pajak**: Menghitung dan melaporkan pajak dengan akurat.
 
-A few resources to get you started if this is your first Flutter project:
+## Tentang BLIP POS
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+BLIP POS dirancang untuk menjadi solusi lengkap bagi usaha kecil dan menengah (UKM) yang ingin meningkatkan efisiensi operasional dan memaksimalkan keuntungan. Dengan antarmuka yang intuitif dan fitur yang komprehensif, BLIP POS membantu Anda fokus pada pertumbuhan bisnis tanpa ribet.
