@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'splash.dart';
 import 'login.dart'; // Sesuaikan dengan path file MyHomePage
 
 void main() {
