@@ -14,15 +14,17 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(
+            horizontal: 20), // Hapus padding vertikal
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              width: double.infinity, // Lebar penuh
+            Transform.translate(
+              offset: const Offset(-20, 20), // Geser 20 piksel ke kiri
               child: Image.asset(
-                'assets/blip_pos_logo.png', // Ganti dengan path aset Anda
-                fit: BoxFit.fitWidth, // Menyesuaikan lebar gambar dengan parent
+                'assets/header.png',
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.fitWidth,
               ),
             ),
             const SizedBox(height: 24),
