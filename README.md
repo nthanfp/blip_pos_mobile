@@ -1,5 +1,10 @@
 # BLIP POS Mobile
 
+**Tugas Pemrograman Piranti Bergerak**
+
+**Nama**: Nathanael Ferry Pratama  
+**NPM**: 2021130019  
+
 **BLIP POS Mobile** adalah aplikasi Point of Sale (POS) berbasis Flutter yang dirancang untuk membantu pemilik bisnis mengelola toko mereka dengan lebih efisien dan efektif. Aplikasi ini menyediakan berbagai fitur yang memudahkan operasional sehari-hari, termasuk:
 
 ## Fitur Utama
