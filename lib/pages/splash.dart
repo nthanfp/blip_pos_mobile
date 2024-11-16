@@ -1,3 +1,4 @@
+import 'package:blip_pos/pages/login.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -38,19 +39,26 @@ class MyHomePage extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Aksi yang dilakukan saat tombol ditekan
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, // Gunakan foregroundColor
+                      foregroundColor: Colors.white,
                       backgroundColor: const Color(0xFF0060B8),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
-                      textStyle: const TextStyle(fontSize: 18),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text('Mulai Sekarang'),
+                    child: const Text(
+                      'Masuk',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],

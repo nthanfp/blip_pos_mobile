@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/!Nathan - Coding/Flutter/PBB_UAS/blip_pos/windows"
+    "cmake.sourceDirectory": "D:/!Nathan - Coding/Flutter/PBB_UAS/blip_pos/windows",
+    "dart.lineLength": 150
 }
