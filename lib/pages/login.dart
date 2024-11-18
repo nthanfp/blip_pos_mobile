@@ -1,3 +1,4 @@
+import 'package:blip_pos/pages/forgot_password.dart';
 import 'package:blip_pos/pages/register.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class LoginPage extends StatelessWidget {
           // Header LOGO
           Container(
             width: double.infinity,
-            height: 200,
+            height: 180,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/header.png'),
@@ -81,7 +82,12 @@ class LoginPage extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                      );
+                    },
                     child: const Text(
                       'Lupa password?',
                       style: TextStyle(color: Color(0xFF0060B8)),
