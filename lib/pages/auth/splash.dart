@@ -1,4 +1,4 @@
-import 'package:blip_pos/pages/login.dart';
+import 'package:blip_pos/pages/auth/login.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatelessWidget {

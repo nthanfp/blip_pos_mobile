@@ -1,4 +1,4 @@
-import 'package:blip_pos/pages/register.dart';
+import 'package:blip_pos/pages/auth/register.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordPage extends StatelessWidget {

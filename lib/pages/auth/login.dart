@@ -1,5 +1,6 @@
-import 'package:blip_pos/pages/forgot_password.dart';
-import 'package:blip_pos/pages/register.dart';
+import 'package:blip_pos/pages/auth/forgot_password.dart';
+import 'package:blip_pos/pages/auth/register.dart';
+import 'package:blip_pos/pages/profile/setting.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -100,7 +101,12 @@ class LoginPage extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProfileSettingPage()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: const Color(0xFF0060B8),
