@@ -44,14 +44,10 @@ class ProfileSettingPage extends StatelessWidget {
               const SizedBox(height: 30),
               Column(
                 children: [
-                  _buildListItem('Saved Messages', Icons.arrow_forward_ios),
-                  _buildListItem('Recent Calls', Icons.arrow_forward_ios),
-                  _buildListItem('Devices', Icons.arrow_forward_ios),
-                  _buildListItem('Notifications', Icons.arrow_forward_ios),
-                  _buildListItem('Appearance', Icons.arrow_forward_ios),
-                  _buildListItem('Language', Icons.arrow_forward_ios),
-                  _buildListItem('Privacy & Security', Icons.arrow_forward_ios),
-                  _buildListItem('Storage', Icons.arrow_forward_ios),
+                  _buildListItem('Profil', Icons.arrow_forward_ios),
+                  _buildListItem('Toko Saya', Icons.arrow_forward_ios),
+                  _buildListItem('Ganti Password', Icons.arrow_forward_ios),
+                  _buildListItem('Keluar', Icons.arrow_forward_ios),
                 ],
               ),
             ],
@@ -65,7 +61,7 @@ class ProfileSettingPage extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Pesanan'),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Penjualan'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Riwayat'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
         ],
