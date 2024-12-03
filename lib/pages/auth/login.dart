@@ -1,6 +1,6 @@
 import 'package:blip_pos/pages/auth/forgot_password.dart';
 import 'package:blip_pos/pages/auth/register.dart';
-import 'package:blip_pos/pages/profile/setting.dart';
+import 'package:blip_pos/pages/profile/profile_setting.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
