@@ -1,11 +1,44 @@
-import 'package:blip_pos/pages/auth/login.dart';
 import 'package:flutter/material.dart';
+import 'package:blip_pos/pages/auth/login.dart';
+import 'package:blip_pos/pages/profile/profile_setting.dart';
+import 'package:blip_pos/lib/token_manager.dart';
+import 'package:blip_pos/service/profile/profile_service.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _checkTokenAndFetchProfile(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError || !snapshot.hasData || !snapshot.data!['success']) {
+          return _buildLoginScreen(context); // Token invalid atau error
+        }
+
+        // Jika token valid, arahkan ke ProfileSettingPage
+        return const ProfileSettingPage();
+      },
+    );
+  }
+
+  // Fungsi untuk memeriksa token dan mengambil data profil
+  Future<Map<String, dynamic>> _checkTokenAndFetchProfile() async {
+    final tokenExists = await TokenManager.hasToken();
+
+    if (tokenExists) {
+      return await getProfile(); // Request profile dengan token yang ada
+    } else {
+      return {'success': false, 'message': 'Token not found. Please log in.'};
+    }
+  }
+
+  // Fungsi untuk menampilkan halaman login jika token tidak valid atau tidak ada
+  Widget _buildLoginScreen(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

@@ -1,13 +1,15 @@
-import 'package:blip_pos/pages/auth/forgot_password.dart';
-import 'package:blip_pos/pages/auth/register.dart';
-import 'package:blip_pos/pages/profile/profile_setting.dart';
 import 'package:flutter/material.dart';
+import 'package:blip_pos/pages/profile/profile_setting.dart';
+import 'package:blip_pos/service/auth/login_service.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
     return Scaffold(
       body: Column(
         children: [
@@ -51,8 +53,9 @@ class LoginPage extends StatelessWidget {
                 ),
 
                 // Form - Email
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
                     labelText: 'Alamat Email',
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
@@ -65,9 +68,10 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 20.0),
 
                 // Form - Password
-                const TextField(
+                TextField(
+                  controller: passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Kata Sandi',
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
@@ -79,33 +83,31 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
 
-                // Text - Forgot Password
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
-                      );
-                    },
-                    child: const Text(
-                      'Lupa password?',
-                      style: TextStyle(color: Color(0xFF0060B8)),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 20.0),
 
                 // Button - Login
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ProfileSettingPage()),
-                      );
+                    onPressed: () async {
+                      final email = emailController.text;
+                      final password = passwordController.text;
+
+                      // Panggil fungsi login
+                      var result = await login(email, password);
+
+                      if (result['success']) {
+                        Navigator.push(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          MaterialPageRoute(builder: (context) => const ProfileSettingPage()),
+                        );
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(result['message'])),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -125,26 +127,6 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-
-                // Text - To Register
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Belum punya akun? '),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const RegisterPage()),
-                        );
-                      },
-                      child: const Text(
-                        'Daftar Sekarang',
-                        style: TextStyle(color: Color(0xFF0060B8), fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

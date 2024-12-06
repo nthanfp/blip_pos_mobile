@@ -2,6 +2,7 @@ import 'package:blip_pos/pages/profile/change_password.dart';
 import 'package:blip_pos/pages/profile/edit_profile.dart';
 import 'package:blip_pos/pages/store/edit_store.dart';
 import 'package:flutter/material.dart';
+import 'package:blip_pos/service/profile/profile_service.dart'; // Import service profile
 
 class ProfileSettingPage extends StatelessWidget {
   const ProfileSettingPage({super.key});
@@ -16,7 +17,7 @@ class ProfileSettingPage extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Container(
-        color: Colors.grey[50], // Slightly different background
+        color: Colors.grey[50],
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,23 +29,46 @@ class ProfileSettingPage extends StatelessWidget {
                 child: const Icon(Icons.person, size: 50, color: Colors.white),
               ),
               const SizedBox(height: 10),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Joko William',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(width: 5),
-                  Icon(Icons.check_circle, color: Colors.blue, size: 18),
-                ],
+              FutureBuilder<Map<String, dynamic>>(
+                future: getProfile(), // Ambil data profil
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(); // Tampilkan loading
+                  }
+
+                  if (snapshot.hasError || !snapshot.hasData || !snapshot.data!['success']) {
+                    return Text('Error: ${snapshot.data?['message'] ?? 'Unknown error'}'); // Tampilkan error jika gagal
+                  }
+
+                  final userProfile = snapshot.data!['data']; // Ambil data user
+                  final name = userProfile['name'] ?? 'Nama Tidak Tersedia';
+                  final username = userProfile['username'] ?? '${userProfile['email']}';
+
+                  return Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            name,
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 5),
+                          const Icon(Icons.check_circle, color: Colors.blue, size: 18),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        username,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
+                  );
+                },
               ),
-              const SizedBox(height: 5),
-              const Text(
-                '@jokwill',
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 30),
+              // Daftar menu
               Column(
                 children: [
                   _buildListItem('Profil', Icons.arrow_forward_ios, context),
