@@ -1,8 +1,60 @@
-import 'package:blip_pos/pages/auth/login.dart';
 import 'package:flutter/material.dart';
+import 'package:blip_pos/pages/auth/login.dart';
+import 'package:blip_pos/service/auth/register_service.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  // Controller untuk mengambil input dari TextField
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  // Fungsi untuk menangani proses registrasi
+  void _registerUser() async {
+    final name = _nameController.text;
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if (password != confirmPassword) {
+      // Jika password dan konfirmasi password tidak cocok
+      _showSnackbar('Password dan Konfirmasi Password tidak cocok', Colors.red);
+      return;
+    }
+
+    // Panggil fungsi register dari service
+    final result = await register(name, email, password, confirmPassword);
+
+    if (result['success']) {
+      // Jika registrasi berhasil
+      _showSnackbar(result['message'], Colors.green);
+      // Bisa mengarahkan ke halaman login setelah berhasil
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    } else {
+      // Jika registrasi gagal
+      _showSnackbar(result['message'], Colors.red);
+    }
+  }
+
+  // Fungsi untuk menampilkan snackbar
+  void _showSnackbar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +101,10 @@ class RegisterPage extends StatelessWidget {
                     ),
                   ),
 
-                  // Form - Email
-                  const TextField(
-                    decoration: InputDecoration(
+                  // Form - Nama
+                  TextField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
                       labelText: 'Nama',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
@@ -63,9 +116,10 @@ class RegisterPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20.0),
 
-                  // Form - Email
-                  const TextField(
-                    decoration: InputDecoration(
+                  // Form - Alamat Email
+                  TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
                       labelText: 'Alamat Email',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
@@ -77,10 +131,11 @@ class RegisterPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20.0),
 
-                  // Form - Password
-                  const TextField(
+                  // Form - Kata Sandi
+                  TextField(
+                    controller: _passwordController,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Kata Sandi',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
@@ -93,10 +148,11 @@ class RegisterPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20.0),
 
-                  // Form - Confirm Password
-                  const TextField(
+                  // Form - Konfirmasi Kata Sandi
+                  TextField(
+                    controller: _confirmPasswordController,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Konfirmasi Kata Sandi',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
@@ -113,7 +169,7 @@ class RegisterPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _registerUser,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: const Color(0xFF0060B8),

@@ -1,8 +1,10 @@
 import 'package:blip_pos/pages/profile/change_password.dart';
 import 'package:blip_pos/pages/profile/edit_profile.dart';
 import 'package:blip_pos/pages/store/edit_store.dart';
+import 'package:blip_pos/service/profile/profile_service.dart';
 import 'package:flutter/material.dart';
-import 'package:blip_pos/service/profile/profile_service.dart'; // Import service profile
+import 'package:blip_pos/pages/auth/login.dart';
+import 'package:blip_pos/lib/token_manager.dart';
 
 class ProfileSettingPage extends StatelessWidget {
   const ProfileSettingPage({super.key});
@@ -74,7 +76,7 @@ class ProfileSettingPage extends StatelessWidget {
                   _buildListItem('Profil', Icons.arrow_forward_ios, context),
                   _buildListItem('Toko Saya', Icons.arrow_forward_ios, context),
                   _buildListItem('Ganti Password', Icons.arrow_forward_ios, context),
-                  _buildListItem('Keluar', Icons.arrow_forward_ios, context),
+                  _buildListItem('Keluar', Icons.logout, context, isLogout: true),
                 ],
               ),
             ],
@@ -96,12 +98,15 @@ class ProfileSettingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(String title, IconData trailingIcon, BuildContext context) {
+  // Tambahkan parameter `isLogout` untuk membedakan menu Logout
+  Widget _buildListItem(String title, IconData trailingIcon, BuildContext context, {bool isLogout = false}) {
     return ListTile(
       title: Text(title),
       trailing: Icon(trailingIcon, size: 18),
       onTap: () {
-        if (title == 'Profil') {
+        if (isLogout) {
+          _logout(context);
+        } else if (title == 'Profil') {
           // Arahkan ke halaman EditProfilePage
           Navigator.push(
             context,
@@ -120,5 +125,43 @@ class ProfileSettingPage extends StatelessWidget {
         }
       },
     );
+  }
+
+  // Fungsi logout
+  void _logout(BuildContext context) async {
+    // Tampilkan dialog konfirmasi sebelum logout
+    bool? confirmLogout = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Logout'),
+          content: const Text('Apakah Anda yakin ingin keluar?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Tidak logout
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Hapus token dan arahkan ke halaman login
+                await TokenManager.deleteToken();
+                Navigator.of(context).pop(true); // Logout
+              },
+              child: const Text('Keluar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmLogout == true) {
+      // Arahkan ke halaman login setelah logout
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    }
   }
 }

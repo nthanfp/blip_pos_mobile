@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:blip_pos/pages/profile/profile_setting.dart';
 import 'package:blip_pos/service/auth/login_service.dart';
+import 'package:blip_pos/pages/completion/completion_company.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -97,13 +100,22 @@ class LoginPage extends StatelessWidget {
                       var result = await login(email, password);
 
                       if (result['success']) {
-                        Navigator.push(
-                          // ignore: use_build_context_synchronously
-                          context,
-                          MaterialPageRoute(builder: (context) => const ProfileSettingPage()),
-                        );
+                        final userData = result['user'];
+                        final storeData = result['store'];
+
+                        // Cek apakah pengguna memiliki store
+                        if (storeData['has_store'] == false) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const CompletionCompany()),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ProfileSettingPage()),
+                          );
+                        }
                       } else {
-                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(result['message'])),
                         );

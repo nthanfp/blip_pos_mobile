@@ -3,13 +3,15 @@ import 'package:http/http.dart' as http;
 import 'package:blip_pos/config/config.dart';
 import 'package:blip_pos/lib/token_manager.dart';
 
-Future<Map<String, dynamic>> login(String email, String password) async {
-  final url = Uri.parse('${Config.apiUrl}/auth/login');
+Future<Map<String, dynamic>> register(String name, String email, String password, String passwordConfirmation) async {
+  final url = Uri.parse('${Config.apiUrl}/auth/register');
 
   // Membuat payload JSON
   final body = json.encode({
+    'name': name,
     'email': email,
     'password': password,
+    'password_confirmation': passwordConfirmation,
   });
 
   try {
@@ -27,14 +29,16 @@ Future<Map<String, dynamic>> login(String email, String password) async {
 
       if (data['success']) {
         final token = data['data']['token'];
+        final user = data['data']['user'];
+
+        // Menyimpan token yang diterima
         await TokenManager.saveToken(token);
 
         return {
           'success': true,
           'message': data['message'],
           'token': token,
-          'user': data['data']['user'],
-          'store': data['data']['store'],
+          'user': user,
         };
       } else {
         return {
@@ -54,7 +58,7 @@ Future<Map<String, dynamic>> login(String email, String password) async {
   } catch (e) {
     return {
       'success': false,
-      'message': 'Error during login: $e',
+      'message': 'Error during registration: $e',
     };
   }
 }
