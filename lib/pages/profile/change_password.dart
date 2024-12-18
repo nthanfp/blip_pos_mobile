@@ -1,3 +1,4 @@
+import 'package:blip_pos/service/profile/change_password.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -43,7 +44,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Password Lama',
-                  labelStyle: TextStyle(color: Color(0xFF0060B8)),
+                  labelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF0060B8)),
                   ),
@@ -84,7 +85,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Konfirmasi Password Baru',
-                  labelStyle: TextStyle(color: Color(0xFF0060B8)),
+                  labelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFF0060B8)),
                   ),
@@ -102,12 +103,40 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Password berhasil diperbarui!')),
+                    // Tampilkan indikator loading
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return const Center(child: CircularProgressIndicator());
+                      },
                     );
-                    // Implement your password change logic here
+
+                    // Panggil service untuk mengganti password
+                    final result = await PasswordService.changePassword(
+                      _oldPasswordController.text,
+                      _newPasswordController.text,
+                    );
+
+                    // Tutup indikator loading
+                    Navigator.of(context).pop();
+
+                    // Tampilkan SnackBar berdasarkan hasil
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(result['message']),
+                        backgroundColor: result['success'] ? Colors.green : Colors.red,
+                      ),
+                    );
+
+                    // Reset form jika berhasil
+                    if (result['success']) {
+                      _oldPasswordController.clear();
+                      _newPasswordController.clear();
+                      _confirmPasswordController.clear();
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(

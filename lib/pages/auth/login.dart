@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:blip_pos/pages/auth/register.dart';
-import 'package:blip_pos/pages/completion/completion_store.dart';
 import 'package:flutter/material.dart';
 import 'package:blip_pos/pages/profile/profile_setting.dart';
 import 'package:blip_pos/service/auth/login_service.dart';
@@ -102,9 +101,7 @@ class LoginPage extends StatelessWidget {
                       var result = await login(email, password);
 
                       if (result['success']) {
-                        final userData = result['user'];
                         final storeData = result['store'];
-                        final profileData = result['data'];
 
                         // print(profileData);
 

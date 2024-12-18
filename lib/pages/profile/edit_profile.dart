@@ -1,9 +1,7 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, prefer_final_fields
 
-import 'dart:convert'; // Pastikan untuk menyesuaikan import dengan path file service Anda
 import 'package:blip_pos/service/profile/update_profile_service.dart';
 import 'package:flutter/material.dart';
-import 'package:blip_pos/lib/token_manager.dart'; // Untuk token manager
 import 'package:blip_pos/service/profile/profile_service.dart';
 
 class EditProfilePage extends StatefulWidget {

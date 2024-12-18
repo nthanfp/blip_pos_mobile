@@ -1,3 +1,4 @@
+import 'package:blip_pos/pages/home/home.dart';
 import 'package:blip_pos/pages/profile/change_password.dart';
 import 'package:blip_pos/pages/profile/edit_profile.dart';
 import 'package:blip_pos/pages/store/edit_store.dart';
@@ -88,6 +89,14 @@ class ProfileSettingPage extends StatelessWidget {
         selectedItemColor: const Color(0xFF0060B8),
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          }
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Penjualan'),
