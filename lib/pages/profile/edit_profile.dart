@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+
 import 'dart:convert'; // Pastikan untuk menyesuaikan import dengan path file service Anda
+import 'package:blip_pos/service/profile/update_profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:blip_pos/lib/token_manager.dart'; // Untuk token manager
 import 'package:blip_pos/service/profile/profile_service.dart';
@@ -34,7 +37,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final response = await getProfile(); // Panggil service getProfile()
 
     if (response['success']) {
-      final profileData = response['data'];
+      final profileData = response['data']['data'];
 
       // Perbarui controller dengan data profil
       setState(() {
@@ -113,11 +116,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                     const SizedBox(height: 30),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // Aksi simpan perubahan
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Profil berhasil diperbarui!')),
-                        );
+                        final result = await UpdateProfileService.updateProfile(_nameController.text);
+
+                        if (result['success']) {
+                          // Jika berhasil, tampilkan SnackBar hijau
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Profil berhasil diperbarui!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else {
+                          // Jika gagal, tampilkan SnackBar merah
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Gagal memperbarui profil: ${result['message']}'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0060B8),

@@ -28,8 +28,8 @@ Future<Map<String, dynamic>> getProfile() async {
       final data = json.decode(response.body);
 
       return {
-        'success': true,
-        'data': data,
+        "success": true,
+        "data": data,
       };
     } else {
       return {

@@ -33,6 +33,7 @@ Future<Map<String, dynamic>> login(String email, String password) async {
           'success': true,
           'message': data['message'],
           'token': token,
+          'data': data['data'],
           'user': data['data']['user'],
           'store': data['data']['store'],
         };

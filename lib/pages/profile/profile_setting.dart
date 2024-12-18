@@ -42,9 +42,9 @@ class ProfileSettingPage extends StatelessWidget {
                     return Text('Error: ${snapshot.data?['message'] ?? 'Unknown error'}'); // Tampilkan error jika gagal
                   }
 
-                  final userProfile = snapshot.data!['data']; // Ambil data user
+                  final userProfile = snapshot.data!['data']['data'];
                   final name = userProfile['name'] ?? 'Nama Tidak Tersedia';
-                  final username = userProfile['username'] ?? '${userProfile['email']}';
+                  final username = userProfile['username'] ?? userProfile['email'];
 
                   return Column(
                     children: [
