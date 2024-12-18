@@ -1,3 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:blip_pos/pages/completion/completion_company.dart';
+import 'package:blip_pos/pages/completion/completion_store.dart';
 import 'package:flutter/material.dart';
 import 'package:blip_pos/pages/auth/login.dart';
 import 'package:blip_pos/pages/profile/profile_setting.dart';
@@ -10,14 +14,14 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: _checkTokenAndFetchProfile(),
+      future: _checkTokenAndFetchProfile(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError || !snapshot.hasData || !snapshot.data!['success']) {
-          return _buildLoginScreen(context); // Token invalid atau error
+          return _buildLoginScreen(context);
         }
 
         // Jika token valid, arahkan ke ProfileSettingPage
@@ -27,11 +31,39 @@ class MyHomePage extends StatelessWidget {
   }
 
   // Fungsi untuk memeriksa token dan mengambil data profil
-  Future<Map<String, dynamic>> _checkTokenAndFetchProfile() async {
+  Future<Map<String, dynamic>> _checkTokenAndFetchProfile(BuildContext context) async {
+    // Add context as a parameter
     final tokenExists = await TokenManager.hasToken();
 
     if (tokenExists) {
-      return await getProfile(); // Request profile dengan token yang ada
+      try {
+        final profileData = await getProfile();
+
+        print("Raw profileData: $profileData");
+
+        final companies = List.from(profileData['data']?['data']?['companies'] ?? []);
+        final stores = List.from(profileData['data']?['data']?['stores'] ?? []);
+
+        print("Companies: $companies");
+        print("Stores: $stores");
+
+        if (companies.isEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CompletionCompany()),
+          );
+        } else if (stores.isEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CompletionStore()),
+          );
+        }
+
+        return {'success': true, 'profile': profileData};
+      } catch (e) {
+        print("Error: $e");
+        return {'success': false, 'message': 'Failed to fetch profile. Please try again.'};
+      }
     } else {
       return {'success': false, 'message': 'Token not found. Please log in.'};
     }

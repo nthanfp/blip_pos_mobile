@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:blip_pos/pages/auth/register.dart';
+import 'package:blip_pos/pages/completion/completion_store.dart';
 import 'package:flutter/material.dart';
 import 'package:blip_pos/pages/profile/profile_setting.dart';
 import 'package:blip_pos/service/auth/login_service.dart';
@@ -102,6 +104,9 @@ class LoginPage extends StatelessWidget {
                       if (result['success']) {
                         final userData = result['user'];
                         final storeData = result['store'];
+                        final profileData = result['data'];
+
+                        // print(profileData);
 
                         // Cek apakah pengguna memiliki store
                         if (storeData['has_store'] == false) {
@@ -115,10 +120,24 @@ class LoginPage extends StatelessWidget {
                             MaterialPageRoute(builder: (context) => const ProfileSettingPage()),
                           );
                         }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(result['message'])),
-                        );
+
+                        // if (profileData != null && profileData['companies'] != null && profileData['companies'].isNotEmpty) {
+                        //   if (profileData['companies'][0]['id'] == null) {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(builder: (context) => const CompletionCompany()),
+                        //     );
+                        //   } else if (profileData != null && profileData['stores'][0]['id'] == null) {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(builder: (context) => const CompletionStore()),
+                        //     );
+                        //   }
+                        // } else {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(content: Text(result['message'])),
+                        //   );
+                        // }
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -139,6 +158,33 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+
+                // Text - Belum punya akun
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Belum Punya Akun? ",
+                        style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                      ),
+                      Text(
+                        "Daftar Sekarang",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Color(0xFF0060B8),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

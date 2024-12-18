@@ -1,5 +1,4 @@
 import 'package:blip_pos/pages/auth/splash.dart';
-
 import 'package:flutter/material.dart';
 
 void main() {
