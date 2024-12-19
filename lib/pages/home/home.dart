@@ -1,4 +1,10 @@
+import 'package:blip_pos/pages/master/master_category.dart';
+import 'package:blip_pos/pages/master/master_product.dart';
+import 'package:blip_pos/pages/master/master_supplier.dart';
+import 'package:blip_pos/pages/master/master_unit.dart';
 import 'package:blip_pos/pages/profile/profile_setting.dart';
+import 'package:blip_pos/pages/transactions/purchase_order.dart';
+import 'package:blip_pos/pages/transactions/sales_order.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -92,19 +98,40 @@ class HomePage extends StatelessWidget {
   void _handleMenuTap(BuildContext context, String label) {
     switch (label) {
       case 'Penjualan':
-        // Navigasi ke halaman Penjualan
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SalesOrderPage()),
+        );
         break;
       case 'Pembelian':
-        // Navigasi ke halaman Pembelian
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const PurchaseOrderPage()),
+        );
         break;
       case 'Produk':
-        // Navigasi ke halaman Produk
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MasterProductPage()),
+        );
         break;
       case 'Kategori':
-        // Navigasi ke halaman Kategori
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MasterCategoryPage()),
+        );
         break;
       case 'Satuan':
-        // Navigasi ke halaman Satuan
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MasterUnitPage()),
+        );
+        break;
+      case 'Pemasok':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MasterSupplier()),
+        );
         break;
       default:
         break;
