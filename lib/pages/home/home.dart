@@ -1,3 +1,11 @@
+import 'dart:convert';
+
+import 'package:blip_pos/config/config.dart';
+import 'package:blip_pos/lib/token_manager.dart';
+import 'package:blip_pos/pages/transactions/sales_order_add.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:blip_pos/pages/master/master_category.dart';
 import 'package:blip_pos/pages/master/master_product.dart';
 import 'package:blip_pos/pages/master/master_supplier.dart';
@@ -5,10 +13,57 @@ import 'package:blip_pos/pages/master/master_unit.dart';
 import 'package:blip_pos/pages/profile/profile_setting.dart';
 import 'package:blip_pos/pages/transactions/purchase_order.dart';
 import 'package:blip_pos/pages/transactions/sales_order.dart';
-import 'package:flutter/material.dart';
+import 'package:blip_pos/service/transactions/sales.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int categories = 0;
+  int units = 0;
+  int products = 0;
+  int suppliers = 0;
+  int totalRevenue = 0;
+  int totalCapitalCost = 0;
+  int totalProfit = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDashboardData();
+  }
+
+  Future<void> _fetchDashboardData() async {
+    try {
+      final token = await TokenManager.getToken();
+      final response = await http.get(
+        Uri.parse('${Config.apiUrl}/dashboard'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          categories = data['categories'];
+          units = data['units'];
+          products = data['products'];
+          suppliers = data['suppliers'];
+          totalRevenue = data['total_revenue'];
+          totalCapitalCost = data['total_capital_cost'];
+          totalProfit = data['total_profit'];
+        });
+      } else {
+        print('Failed to fetch dashboard data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Failed to fetch dashboard data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,39 +86,58 @@ class HomePage extends StatelessWidget {
       body: Container(
         padding: const EdgeInsets.all(16),
         color: Colors.grey[50],
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // Jumlah kolom dalam grid
-            mainAxisSpacing: 16, // Jarak antar baris
-            crossAxisSpacing: 16, // Jarak antar kolom
-            childAspectRatio: 1, // Proporsi ukuran kotak (1:1)
-          ),
-          itemCount: menuItems.length,
-          itemBuilder: (context, index) {
-            final item = menuItems[index];
-            return GestureDetector(
-              onTap: () {
-                // Navigasi atau aksi saat menu ditekan
-                _handleMenuTap(context, item['label']);
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.blue.shade100,
-                    child: Icon(item['icon'], size: 30, color: const Color(0xFF0060B8)),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    item['label'],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ],
+        child: Column(
+          children: [
+            Wrap(
+              spacing: 16.0, // Spacing between cards
+              runSpacing: 16.0, // Spacing between rows of cards
+              children: [
+                _buildStatCard(Icons.category, 'Kategori', categories),
+                _buildStatCard(Icons.scale, 'Satuan', units),
+                _buildStatCard(Icons.production_quantity_limits, 'Produk', products),
+                _buildStatCard(Icons.local_shipping, 'Pemasok', suppliers),
+                _buildStatCard(Icons.attach_money, 'Pendapatan', totalRevenue),
+                _buildStatCard(Icons.money_off, 'Modal', totalCapitalCost),
+                _buildStatCard(Icons.account_balance_wallet, 'Keuntungan', totalProfit),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 1,
+                ),
+                itemCount: menuItems.length,
+                itemBuilder: (context, index) {
+                  final item = menuItems[index];
+                  return GestureDetector(
+                    onTap: () {
+                      _handleMenuTap(context, item['label']);
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.blue.shade100,
+                          child: Icon(item['icon'], size: 30, color: const Color(0xFF0060B8)),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          item['label'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -76,6 +150,16 @@ class HomePage extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          } else if (index == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AddSalesOrderPage()),
+            );
+          } else if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const SalesOrderPage()),
             );
           } else if (index == 3) {
             Navigator.pushReplacement(
@@ -94,7 +178,34 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Fungsi untuk menangani tap pada menu
+  Widget _buildDashboardItem(IconData icon, String label, int value) {
+    return Column(
+      children: [
+        Icon(icon, size: 30, color: const Color(0xFF0060B8)),
+        const SizedBox(height: 8),
+        Text(label, style: const TextStyle(fontSize: 14)),
+        Text('$value', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
+  Widget _buildStatCard(IconData icon, String label, int value) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To prevent card from taking full height
+          children: [
+            Icon(icon, size: 30, color: const Color(0xFF0060B8)),
+            const SizedBox(height: 8),
+            Text(label, style: const TextStyle(fontSize: 14)),
+            Text('$value', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _handleMenuTap(BuildContext context, String label) {
     switch (label) {
       case 'Penjualan':
